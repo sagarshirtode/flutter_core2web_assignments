@@ -1,4 +1,5 @@
 import 'package:core2webassignment/pages/Assinmenst1/assinmenst1_page.dart';
+import 'package:core2webassignment/pages/Assinmenst2/assinmenst2_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,14 +22,28 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => Assinmenst1Page(),
-                    ),
-                  );
-                },
-                child: Text("Assignment 1"))
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Assinmenst1Page(),
+                  ),
+                );
+              },
+              child: Text("Assignment 1"),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Assinmenst2Page(),
+                  ),
+                );
+              },
+              child: Text("Assignment 2"),
+            ),
           ],
         ),
       ),
