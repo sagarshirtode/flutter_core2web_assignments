@@ -1,4 +1,5 @@
 import 'package:core2webassignment/pages/Assinmenst3/que1.dart';
+import 'package:core2webassignment/pages/Assinmenst3/que2.dart';
 import 'package:flutter/material.dart';
 
 class Assinmenst3Page extends StatelessWidget {
@@ -15,16 +16,27 @@ class Assinmenst3Page extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => Que31(),
-                    ),
-                  );
-                },
-                child: Text("Question 1")),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Que31(),
+                  ),
+                );
+              },
+              child: Text("Question 1"),
+            ),
             SizedBox(
               height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Que32(),
+                  ),
+                );
+              },
+              child: Text("Question 2"),
             ),
           ],
         ),
