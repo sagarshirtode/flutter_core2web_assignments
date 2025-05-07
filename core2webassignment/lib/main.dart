@@ -1,3 +1,13 @@
+import 'package:core2webassignment/pages/Assinmenst4/que10.dart';
+import 'package:core2webassignment/pages/Assinmenst4/que4.dart';
+import 'package:core2webassignment/pages/Assinmenst4/que1.dart';
+import 'package:core2webassignment/pages/Assinmenst4/que2.dart';
+import 'package:core2webassignment/pages/Assinmenst4/que3.dart';
+import 'package:core2webassignment/pages/Assinmenst4/que5.dart';
+import 'package:core2webassignment/pages/Assinmenst4/que6.dart';
+import 'package:core2webassignment/pages/Assinmenst4/que7.dart';
+import 'package:core2webassignment/pages/Assinmenst4/que8.dart';
+import 'package:core2webassignment/pages/Assinmenst4/que9.dart';
 import 'package:flutter/material.dart';
 
 import 'home_page.dart';
@@ -15,11 +25,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      // home: const HomePage(),
+      home: Que10(),
     );
   }
 }
