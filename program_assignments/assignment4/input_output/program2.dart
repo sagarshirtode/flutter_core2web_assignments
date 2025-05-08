@@ -1,5 +1,4 @@
 import 'dart:io';
-
 void main() {
   print("Enter number :1");
   int number1 =
