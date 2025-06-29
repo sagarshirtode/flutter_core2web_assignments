@@ -8,6 +8,7 @@ import 'package:core2webassignment/pages/Assinmenst4/que6.dart';
 import 'package:core2webassignment/pages/Assinmenst4/que7.dart';
 import 'package:core2webassignment/pages/Assinmenst4/que8.dart';
 import 'package:core2webassignment/pages/Assinmenst4/que9.dart';
+import 'package:core2webassignment/pages/iced_mocha_page.dart';
 import 'package:flutter/material.dart';
 
 import 'home_page.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const IcedMochaPage(),
       //home: Que10(),
     );
   }
