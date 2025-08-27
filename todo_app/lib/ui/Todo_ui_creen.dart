@@ -1,6 +1,8 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:todo_app/response_model/todo_model.dart';
 
 class TodoUiCreen extends StatefulWidget {
   const TodoUiCreen({super.key});
@@ -10,13 +12,61 @@ class TodoUiCreen extends StatefulWidget {
 }
 
 class _TodoUiCreenState extends State<TodoUiCreen> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  List<ToDoModel> todoCards = [
+    ToDoModel(
+        title: 'Flutter',
+        description: 'A UI toolkit for building natively compiled applications',
+        date: '2023-10-01'),
+    ToDoModel(
+        title: 'Python',
+        description: 'A programming language that lets you work quickly',
+        date: '2023-10-02'),
+    ToDoModel(
+        title: 'JavaScript',
+        description:
+            'A programming language that conforms to the ECMAScript specification',
+        date: '2023-10-03'),
+  ];
+
   List cardColorsList = const [
     Color.fromRGBO(250, 232, 232, 1),
     Color.fromRGBO(232, 237, 250, 1),
     Color.fromRGBO(250, 249, 232, 1),
     Color.fromRGBO(250, 232, 250, 1),
   ];
-  void showBottomSheet() {
+  void clearController() {
+    titleController.clear();
+    descriptionController.clear();
+    dateController.clear();
+  }
+
+  void submit(bool doEdit, [ToDoModel? obj]) {
+    if (titleController.text.isNotEmpty &&
+        descriptionController.text.isNotEmpty &&
+        dateController.text.isNotEmpty) {
+      if (doEdit) {
+        obj!.title = titleController.text;
+        obj.description = descriptionController.text;
+        obj.date = dateController.text;
+      } else {
+        todoCards.add(
+          ToDoModel(
+            title: titleController.text,
+            description: descriptionController.text,
+            date: dateController.text,
+          ),
+        );
+      }
+      clearController();
+      setState(() {});
+    }
+    Navigator.of(context).pop();
+  }
+
+  void showBottomSheet(bool doEdit, [ToDoModel? obj]) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -46,6 +96,7 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
                   ),
                 ),
                 TextField(
+                  controller: titleController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -64,6 +115,7 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
                   ),
                 ),
                 TextField(
+                  controller: descriptionController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -82,6 +134,7 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
                   ),
                 ),
                 TextField(
+                  controller: dateController,
                   decoration: InputDecoration(
                     suffixIcon: const Icon(
                       Icons.calendar_month_outlined,
@@ -93,12 +146,29 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
                       ),
                     ),
                   ),
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      firstDate: DateTime(2025),
+                      lastDate: DateTime(2026),
+                    );
+                    dateController.text =
+                        DateFormat.yMMMd().format(pickedDate!);
+                  },
                 ),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(onPressed: () {}, child: Text("Submit"))
+                    ElevatedButton(
+                        onPressed: () {
+                          if (doEdit) {
+                            submit(doEdit, obj);
+                          } else {
+                            submit(doEdit);
+                          }
+                        },
+                        child: doEdit ? Text("Update") : Text("Submit"))
                   ],
                 ),
                 SizedBox(height: 30),
@@ -125,7 +195,7 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
         ),
       ),
       body: ListView.builder(
-        itemCount: 4,
+        itemCount: todoCards.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: EdgeInsets.all(10),
@@ -157,9 +227,8 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
                       Expanded(
                         child: Column(
                           children: [
-                            Text('Flutter'),
-                            Text(
-                                'Dart , Inheritance,Polimorphism,Future Async,State managment,Getx'),
+                            Text(todoCards[index].title),
+                            Text(todoCards[index].description),
                           ],
                         ),
                       ),
@@ -167,11 +236,30 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
                         padding: EdgeInsets.all(10),
                         child: Row(
                           children: [
-                            Text("16 August 2025"),
+                            Text(
+                              todoCards[index].date,
+                              style: GoogleFonts.quicksand(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(width: 10),
-                            Icon(Icons.edit_outlined),
+                            GestureDetector(
+                              child: Icon(Icons.edit_outlined),
+                              onTap: () {
+                                titleController.text = todoCards[index].title;
+                                descriptionController.text =
+                                    todoCards[index].description;
+                                dateController.text = todoCards[index].date;
+                                showBottomSheet(true, todoCards[index]);
+                              },
+                            ),
                             SizedBox(width: 10),
-                            Icon(Icons.delete_outline_rounded),
+                            GestureDetector(
+                              child: Icon(Icons.delete_outline_rounded),
+                              onTap: () {
+                                todoCards.removeAt(index);
+                                setState(() {});
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -185,7 +273,7 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showBottomSheet();
+          showBottomSheet(false);
         },
         backgroundColor: Color.fromRGBO(2, 167, 177, 1.0),
         child: Icon(Icons.add),
