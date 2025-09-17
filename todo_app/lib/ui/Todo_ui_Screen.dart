@@ -1,17 +1,20 @@
 // ignore: file_names
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_app/data/database.dart';
 import 'package:todo_app/response_model/todo_model.dart';
 
-class TodoUiCreen extends StatefulWidget {
-  const TodoUiCreen({super.key});
+class TodoUiScreen extends StatefulWidget {
+  const TodoUiScreen({super.key});
 
   @override
-  State<TodoUiCreen> createState() => _TodoUiCreenState();
+  State<TodoUiScreen> createState() => _TodoUiScreenState();
 }
 
-class _TodoUiCreenState extends State<TodoUiCreen> {
+class _TodoUiScreenState extends State<TodoUiScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController dateController = TextEditingController();
@@ -19,16 +22,19 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
     ToDoModel(
         title: 'Flutter',
         description: 'A UI toolkit for building natively compiled applications',
-        date: '2023-10-01'),
+        date: '2023-10-01',
+        id: 1),
     ToDoModel(
         title: 'Python',
         description: 'A programming language that lets you work quickly',
-        date: '2023-10-02'),
+        date: '2023-10-02',
+        id: 2),
     ToDoModel(
         title: 'JavaScript',
         description:
             'A programming language that conforms to the ECMAScript specification',
-        date: '2023-10-03'),
+        date: '2023-10-03',
+        id: 3),
   ];
 
   List cardColorsList = const [
@@ -37,6 +43,28 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
     Color.fromRGBO(250, 249, 232, 1),
     Color.fromRGBO(250, 232, 250, 1),
   ];
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  void getData() async {
+    List<Map> cardList = await TodoDatabase().getTodoItems();
+    log("CARD LIST: $cardList");
+    for (var element in cardList) {
+      todoCards.add(
+        ToDoModel(
+          date: element['date'],
+          description: element['description'],
+          title: element['title'],
+          id: element['id'],
+        ),
+      );
+    }
+    setState(() {});
+  }
+
   void clearController() {
     titleController.clear();
     descriptionController.clear();
@@ -51,14 +79,32 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
         obj!.title = titleController.text;
         obj.description = descriptionController.text;
         obj.date = dateController.text;
+        Map<String, dynamic> row = {
+          'title': obj.title,
+          'description': obj.description,
+          'date': obj.date,
+          'id': obj.id,
+        };
+        TodoDatabase().updateTodoItem(row);
       } else {
-        todoCards.add(
-          ToDoModel(
-            title: titleController.text,
-            description: descriptionController.text,
-            date: dateController.text,
-          ),
-        );
+        //Add
+
+        // todoCards.add(
+        //   ToDoModel(
+        //     title: titleController.text,
+        //     description: descriptionController.text,
+        //     date: dateController.text,
+        //   ),
+        // );
+        Map<String, dynamic> row = {
+          'title': titleController.text,
+          'description': descriptionController.text,
+          'date': dateController.text,
+        };
+        TodoDatabase().insertTodoItem(row);
+        clearController();
+        Navigator.of(context).pop();
+        setState(() {});
       }
       clearController();
       setState(() {});
@@ -243,7 +289,10 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
                             ),
                             SizedBox(width: 10),
                             GestureDetector(
-                              child: Icon(Icons.edit_outlined),
+                              child: Icon(
+                                Icons.edit,
+                                color: Color.fromRGBO(2, 167, 177, 1),
+                              ),
                               onTap: () {
                                 titleController.text = todoCards[index].title;
                                 descriptionController.text =
@@ -256,6 +305,8 @@ class _TodoUiCreenState extends State<TodoUiCreen> {
                             GestureDetector(
                               child: Icon(Icons.delete_outline_rounded),
                               onTap: () {
+                                int id = todoCards[index].id!;
+                                TodoDatabase().deleteTodoItem(id);
                                 todoCards.removeAt(index);
                                 setState(() {});
                               },

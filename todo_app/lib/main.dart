@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/ui/Todo_ui_creen.dart';
+import 'package:todo_app/ui/Todo_ui_Screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: TodoUiCreen(),
+      home: TodoUiScreen(),
     );
   }
 }
